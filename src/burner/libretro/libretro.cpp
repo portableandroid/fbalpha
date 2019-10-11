@@ -1198,9 +1198,20 @@ static bool retro_load_game_common()
 
 		// Start CD reader emulation if needed
 		if (nGameType == RETRO_GAME_TYPE_NEOCD) {
+#ifdef PORTANDROID
+			if (!CDEmuInit()) {
+				log_cb(RETRO_LOG_INFO, "[FBA] Starting neogeo CD\n");
+			}else{
+				//Initial CD interface failed, maybe format not supported yet, e.g.: *.ISO
+				log_cb(RETRO_LOG_INFO, "[FBA] Initial neogeo CD interface failed!\n");
+				return false;
+			}
+
+#else
 			if (CDEmuInit()) {
 				log_cb(RETRO_LOG_INFO, "[FBA] Starting neogeo CD\n");
 			}
+#endif
 		}
 
 		// Initialize dipswitches

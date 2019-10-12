@@ -16,6 +16,10 @@
 
 #include <streams/file_stream.h>
 
+#ifdef PORTANDROID
+#include "emu_init.h"
+#endif
+
 #define FBA_VERSION "v0.2.97.44"
 
 static void log_dummy(enum retro_log_level level, const char *fmt, ...) { }
@@ -445,13 +449,19 @@ static void ForceFrameStep(int bDraw)
 	nFramesEmulated++;
 #endif
 	nCurrentFrame++;
-
+#ifdef PORTANDROID
+	if(cb_context.video_skip){
+		pBurnDraw = NULL;
+	}
+#else
 	if (!bDraw)
 		pBurnDraw = NULL;
 #ifdef FBA_DEBUG
 	else
 		nFramesRendered++;
 #endif
+#endif
+
 	BurnDrvFrame();
 }
 
